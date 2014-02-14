@@ -1,68 +1,82 @@
 /**
+
 Given an array S of n integers, are there elements a, b, c in S such that a + b + c = 0? Find all unique triplets in the array which gives the sum of zero.
 
 Note:
 
-Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ? b ? c)
+Elements in a triplet (a,b,c) must be in non-descending order. (ie, a ≤ b ≤ c)
 The solution set must not contain duplicate triplets.
-
-For example, given array S = {-1 0 1 2 -1 -4},
+For example, given array S = [-1,0,1,2,-1,-4],
 
 A solution set is:
-(-1, 0, 1)
-(-1, -1, 2)
-**/
 
+[
+  [-1, 0, 1],
+  [-1, -1, 2]
+]
+
+
+**/
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class ThreeSum{
+public class ThreeSum {
 
+	public static void main(String args[]) {
 
-	public static void main(String[] args) {
-
+		int[] arr = {-1,0,1,2,-1,-4};
 		ThreeSum test = new ThreeSum();
-		int[] testArr = {-1,0,1,2,-1,-4};
-		ArrayList<ArrayList<Integer>> result= test.threeSum(testArr);
-		System.out.println(result);
+
+		ArrayList<ArrayList<Integer>> result = test.threeSum(arr);
 	
+		for (ArrayList<Integer> triplet: result) {
+			System.out.println(triplet);
+		
+		}
 	}
+	
 
+	public ArrayList<ArrayList<Integer>> threeSum(int[] arr) {
 
-	ArrayList<ArrayList<Integer>> threeSum(int[] num) {
+		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();
+		Arrays.sort(arr);
 
-		ArrayList<ArrayList<Integer>> result = new ArrayList<ArrayList<Integer>>();		
-		Arrays.sort(num);
-		int a, b, c;
-		int l,k;
-		for (int i=0; i< num.length-3; i++ ) {
-			a=num[i];
-			l=i+1;
-			k=num.length-1;
-			while (l<k) {
-				b=num[l];
-				c=num[k];
-				if (a+b+c == 0) {
-					// all right we find it
-					ArrayList<Integer> list = new ArrayList<Integer>();
-					list.add(a);
-					list.add(b);
-					list.add(c);
-					result.add(list);
+		
+		int n= arr.length;
+		for (int i=0; i<n-2; i++) {
+			// skip if same as previous element
+			if (i>0 && arr[i]==arr[i-1])
+				continue;
+			
+			// look for pair in arr[i+1....n] that adds up -arr[i]
+			int j=i+1;
+			int k=n-1;
+			boolean isFound=false;
+			while (j<=k) {
+				if ((arr[j]+ arr[k])> (-arr[i])) {
+					k--;	
+				} else if ((arr[j]+ arr[k])< (-arr[i]))
+				{
+					j++;
+				} else {
+					isFound=true;
+				}
+
+				// found one triplet!
+	                       if (isFound) {
+        	                        ArrayList<Integer> triplet = new ArrayList<Integer>();
+                	                triplet.add(arr[i]);
+                        	        triplet.add(arr[j]);
+                                	triplet.add(arr[k]);
+                                  	result.add(triplet);
+					isFound=false;
+					j++;
 					k--;
-					l++;
-
-				}	
-				else if (a+b+c>0)
-					k--;
-				else
-					l++;
-
+                        	}
 			}
 
 		}
 		return result;
 	}
-
 
 }
